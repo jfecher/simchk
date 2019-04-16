@@ -54,7 +54,7 @@ let analyze lines lower_threshhold upper_threshhold exclude_pattern =
   let v = Vector.create () in
   for i = 0 to Vector.length lines do
     for j = i + 1 to Vector.length lines do
-      let similarity = (find_similarities (Vector.get lines i) (Vector.get lines j) i j) in
+      let similarity = find_similarities (Vector.get lines i) (Vector.get lines j) i j in
       if should_exclude similarity lower_threshhold upper_threshhold exclude_pattern then ()
       else Vector.push v similarity
     done
@@ -115,8 +115,8 @@ let () =
     print_help ()
   else
     let v = lines_of_file Sys.argv.(1) in
-    let lower_threshhold = if argc > 2 then (float_of_string Sys.argv.(2)) else default_lower_threshhold in
-    let upper_threshhold = if argc > 3 then (float_of_string Sys.argv.(3)) else default_upper_threshhold in
+    let lower_threshhold = if argc > 2 then float_of_string Sys.argv.(2) else default_lower_threshhold in
+    let upper_threshhold = if argc > 3 then float_of_string Sys.argv.(3) else default_upper_threshhold in
     let exclude_pattern = if argc > 4 then Str.regexp (".*" ^ Sys.argv.(4) ^ ".*") else default_exclude_pattern in
     analyze v lower_threshhold upper_threshhold exclude_pattern
     |> Vector.iter print_sim
